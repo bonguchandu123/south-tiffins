@@ -85,7 +85,7 @@ let deleteTableId = null;
 let currentQRUrl  = '';
 
 // ── Use local IP so phone can scan and open the menu ──
-const BASE_URL = 'http://10.11.210.164:8000';
+const BASE_URL = window.location.origin;
 
 function getQRImageUrl(menuUrl) {
     return 'https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=10&data=' + encodeURIComponent(menuUrl);
