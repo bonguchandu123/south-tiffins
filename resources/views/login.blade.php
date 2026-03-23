@@ -5,359 +5,471 @@
 @section('styles')
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,600&family=Outfit:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
-  --burnt:   #C1440E;
-  --saffron: #F4A135;
-  --cream:   #FDF6ED;
-  --dark:    #1A0F05;
-  --dark2:   #2D1C0D;
-  --border:  rgba(253,246,237,0.1);
-  --font-display: 'Playfair Display', Georgia, serif;
-  --font-body:    'Outfit', sans-serif;
+  --amber:     #F5A800;
+  --amber2:    #FFB800;
+  --orange:    #E85D04;
+  --brown:     #3D1C02;
+  --brown2:    #5C2E00;
+  --brown-mid: #2A1200;
+  --cream:     #FFF8ED;
+  --white:     #FFFFFF;
+  --gray:      #888;
+  --red:       #D62828;
+  --font-hero: 'Bebas Neue', cursive;
+  --font-head: 'Oswald', sans-serif;
+  --font-body: 'Nunito', sans-serif;
 }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
   font-family: var(--font-body) !important;
-  background: var(--dark) !important;
+  background: var(--brown) !important;
   color: var(--cream);
   min-height: 100vh;
   display: flex !important;
   align-items: stretch;
   padding: 0 !important;
+  overflow: hidden;
 }
 
-/* Noise texture */
+/* Food pattern background overlay */
 body::before {
-  content: ''; position: fixed; inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.04'/%3E%3C/svg%3E");
-  pointer-events: none; z-index: 9997; opacity: .28;
+  content: '';
+  position: fixed; inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg width='70' height='70' viewBox='0 0 70 70' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Ccircle cx='18' cy='18' r='9' stroke='%23c47a00' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Ccircle cx='52' cy='52' r='9' stroke='%23c47a00' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Cpath d='M35 6 L39 16 L31 16 Z' fill='%23c47a00' opacity='0.08'/%3E%3Crect x='44' y='10' width='16' height='11' rx='5.5' stroke='%23c47a00' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3Cpath d='M6 42 Q10 36 14 42 Q18 48 22 42' stroke='%23c47a00' stroke-width='1.2' fill='none' opacity='0.1'/%3E%3C/g%3E%3C/svg%3E");
+  pointer-events: none; z-index: 0; opacity: .7;
 }
 
-@keyframes slideInLeft  { from{opacity:0;transform:translateX(-28px)} to{opacity:1;transform:translateX(0)} }
-@keyframes slideInRight { from{opacity:0;transform:translateX(28px)}  to{opacity:1;transform:translateX(0)} }
+@keyframes slideInLeft  { from{opacity:0;transform:translateX(-32px)} to{opacity:1;transform:translateX(0)} }
+@keyframes slideInRight { from{opacity:0;transform:translateX(32px)}  to{opacity:1;transform:translateX(0)} }
 @keyframes slideInUp    { from{opacity:0;transform:translateY(28px)}  to{opacity:1;transform:translateY(0)} }
 @keyframes fadeUp       { from{opacity:0;transform:translateY(14px)}  to{opacity:1;transform:translateY(0)} }
 @keyframes spin         { to{transform:rotate(360deg)} }
+@keyframes pulse-ring   { 0%,100%{transform:scale(1);opacity:.6} 50%{transform:scale(1.08);opacity:1} }
 
-/* ══ SPLIT ══ */
+/* ══ SPLIT LAYOUT ══ */
 .login-split {
   display: flex;
   width: 100%;
   min-height: 100vh;
+  position: relative;
+  z-index: 1;
 }
 
-/* ══════════════════════
-   LEFT — FORM
-══════════════════════ */
+/* ══════════════════════════════
+   LEFT — BRAND / VISUAL PANEL
+══════════════════════════════ */
 .login-left {
+  width: 52%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 60px 48px;
+  animation: slideInLeft .7s cubic-bezier(.25,.46,.45,.94) both;
+}
+
+/* Background food image */
+.ll-bg {
+  position: absolute; inset: 0;
+  background-image: url('https://images.unsplash.com/photo-1601050690597-df0568f70950?w=1200&q=85');
+  background-size: cover;
+  background-position: center;
+  filter: brightness(.22) saturate(1.1);
+  transition: transform 18s ease;
+}
+.login-left:hover .ll-bg { transform: scale(1.06); }
+
+/* Amber gradient overlay */
+.ll-grad {
+  position: absolute; inset: 0;
+  background: linear-gradient(145deg,
+    rgba(245,168,0,.18) 0%,
+    rgba(61,28,2,.55) 45%,
+    rgba(30,10,0,.92) 100%
+  );
+}
+
+/* Right edge accent line */
+.ll-edge {
+  position: absolute; top: 60px; bottom: 60px; right: 0;
+  width: 4px;
+  background: linear-gradient(to bottom, transparent, var(--amber), transparent);
+  opacity: .45;
+}
+
+/* TIFFINS big watermark — amber stroke */
+.ll-wm {
+  position: absolute;
+  bottom: -20px; left: -15px;
+  font-family: var(--font-hero);
+  font-size: clamp(100px, 16vw, 200px);
+  line-height: 1; white-space: nowrap;
+  pointer-events: none; user-select: none; z-index: 1;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(245,168,0,.09);
+  letter-spacing: .04em;
+  transform: rotate(-5deg);
+}
+
+.ll-content {
+  position: relative; z-index: 2;
+  text-align: center;
+  max-width: 380px; width: 100%;
+  display: flex; flex-direction: column; align-items: center;
+}
+
+/* ── Eyebrow tag ── */
+.ll-eyebrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  border: 1.5px solid rgba(245,168,0,.4);
+  color: rgba(255,255,255,.7);
+  font-family: var(--font-head);
+  font-size: .7rem; font-weight: 600;
+  letter-spacing: .2em; text-transform: uppercase;
+  padding: 6px 18px; border-radius: 2px;
+  margin-bottom: 24px; background: rgba(245,168,0,.06);
+  animation: fadeUp .6s .1s both;
+}
+.ll-eyebrow::before { content: ''; display: block; width: 16px; height: 1.5px; background: var(--amber); }
+
+/* ── Big typographic hero ── */
+.ll-title {
+  margin-bottom: 6px;
+  animation: fadeUp .7s .2s both;
+  line-height: 1;
+}
+.ll-title .t-top {
+  display: block;
+  font-family: var(--font-head);
+  font-size: clamp(.7rem, 1vw, .82rem);
+  font-weight: 500; letter-spacing: .42em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-bottom: 4px;
+}
+.ll-title .t-mid {
+  display: block;
+  font-family: var(--font-hero);
+  font-size: clamp(4rem, 7.5vw, 7rem);
+  color: var(--amber);
+  letter-spacing: .04em; line-height: .88;
+  text-shadow: 0 6px 40px rgba(245,168,0,.2);
+}
+.ll-title .t-bot {
+  display: block;
+  font-family: var(--font-head);
+  font-size: clamp(.7rem, 1vw, .82rem);
+  font-weight: 500; letter-spacing: .42em; text-transform: uppercase;
+  color: rgba(255,255,255,.5); margin-top: 4px;
+}
+
+/* ── Divider ornament ── */
+.ll-ornament {
+  display: flex; align-items: center; gap: 12px;
+  margin: 22px 0 28px; width: 100%;
+  animation: fadeUp .6s .35s both;
+}
+.ll-ornament::before { content: ''; flex: 1; height: 1px; background: linear-gradient(to right, transparent, rgba(245,168,0,.4)); }
+.ll-ornament::after  { content: ''; flex: 1; height: 1px; background: linear-gradient(to left,  transparent, rgba(245,168,0,.4)); }
+.ll-ornament-icon { font-size: 1.1rem; flex-shrink: 0; }
+
+/* ── Feature pills ── */
+.ll-pills {
+  display: flex; flex-direction: column; gap: 10px;
+  width: 100%; animation: fadeUp .6s .48s both;
+}
+.ll-pill {
+  display: flex; align-items: center; gap: 14px;
+  background: rgba(255,255,255,.04);
+  border: 1px solid rgba(255,255,255,.08);
+  border-left: 3px solid var(--amber);
+  border-radius: 3px; padding: 13px 16px;
+  transition: all .3s; cursor: default;
+}
+.ll-pill:hover {
+  background: rgba(245,168,0,.08);
+  border-color: rgba(245,168,0,.25);
+  border-left-color: var(--amber);
+  transform: translateX(6px);
+}
+.ll-pill-icon {
+  width: 38px; height: 38px;
+  background: rgba(245,168,0,.12);
+  border: 1px solid rgba(245,168,0,.2);
+  border-radius: 3px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; flex-shrink: 0;
+}
+.ll-pill-txt strong {
+  display: block; font-family: var(--font-head);
+  font-size: .82rem; font-weight: 700; letter-spacing: .04em;
+  color: var(--cream); margin-bottom: 1px; text-transform: uppercase;
+}
+.ll-pill-txt span { font-size: .72rem; color: rgba(255,255,255,.38); font-weight: 400; }
+
+/* ── Stats row ── */
+.ll-stats {
+  display: flex; margin-top: 20px; width: 100%;
+  border: 1px solid rgba(245,168,0,.18);
+  border-radius: 3px; overflow: hidden;
+  animation: fadeUp .6s .62s both;
+  background: rgba(0,0,0,.2);
+}
+.ll-stat {
+  flex: 1; text-align: center; padding: 12px 8px;
+  border-right: 1px solid rgba(245,168,0,.12);
+}
+.ll-stat:last-child { border-right: none; }
+.ll-stat-val {
+  font-family: var(--font-hero); font-size: 1.6rem;
+  color: var(--amber); line-height: 1; margin-bottom: 3px;
+  letter-spacing: .04em;
+}
+.ll-stat-lbl {
+  font-family: var(--font-head); font-size: .6rem;
+  font-weight: 600; letter-spacing: .12em; text-transform: uppercase;
+  color: rgba(255,255,255,.28);
+}
+
+/* ══════════════════════════════
+   RIGHT — FORM PANEL
+══════════════════════════════ */
+.login-right {
   flex: 1;
   display: flex; flex-direction: column;
   justify-content: center; align-items: center;
   padding: 60px 52px;
-  background: var(--dark);
+  background: var(--cream);
   position: relative; overflow: hidden;
-  animation: slideInLeft .7s cubic-bezier(.25,.46,.45,.94) both;
+  animation: slideInRight .7s cubic-bezier(.25,.46,.45,.94) both;
 }
 
-/* Radial glow */
-.login-left::before {
+/* Subtle amber radial glow bottom-right */
+.login-right::before {
   content: ''; position: absolute;
-  bottom: -120px; left: -80px;
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, rgba(193,68,14,.09) 0%, transparent 68%);
-  pointer-events: none; z-index: 0;
+  bottom: -80px; right: -60px;
+  width: 420px; height: 420px;
+  background: radial-gradient(circle, rgba(245,168,0,.1) 0%, transparent 68%);
+  pointer-events: none;
+}
+/* Top-left accent */
+.login-right::after {
+  content: ''; position: absolute;
+  top: -60px; left: -40px;
+  width: 300px; height: 300px;
+  background: radial-gradient(circle, rgba(232,93,4,.06) 0%, transparent 68%);
+  pointer-events: none;
 }
 
-/* Big "Tiffins" watermark behind form — cream stroke only */
-.wm-text {
+/* Big "TIFFINS" cream watermark */
+.rp-wm {
   position: absolute;
-  bottom: -10px; left: -10px;
-  font-family: var(--font-display);
-  font-weight: 900; font-style: italic;
-  font-size: clamp(80px, 14vw, 160px);
+  bottom: -10px; right: -14px;
+  font-family: var(--font-hero);
+  font-size: clamp(80px, 12vw, 160px);
   line-height: 1; white-space: nowrap;
   pointer-events: none; user-select: none; z-index: 0;
   color: transparent;
-  -webkit-text-stroke: 1.5px rgba(253,246,237,0.07);
-  letter-spacing: -.02em;
-  transform: rotate(-6deg);
+  -webkit-text-stroke: 2px rgba(61,28,2,.06);
+  letter-spacing: .04em;
+  transform: rotate(-5deg);
 }
 
-.login-form-inner { width: 100%; max-width: 400px; position: relative; z-index: 1; }
+/* Top accent bar */
+.rp-accent-bar {
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(to right, var(--amber), var(--orange), var(--brown));
+}
 
+.login-form-inner {
+  width: 100%; max-width: 400px;
+  position: relative; z-index: 1;
+}
+
+/* Back link */
 .login-back {
   display: inline-flex; align-items: center; gap: 8px;
-  font-size: .75rem; font-weight: 500; letter-spacing: .12em; text-transform: uppercase;
-  color: rgba(253,246,237,.32); text-decoration: none;
-  margin-bottom: 44px; transition: color .25s;
-  animation: fadeUp .6s .1s both;
+  font-family: var(--font-head); font-size: .72rem; font-weight: 600;
+  letter-spacing: .14em; text-transform: uppercase;
+  color: rgba(61,28,2,.35); text-decoration: none;
+  margin-bottom: 40px; transition: color .25s;
+  animation: fadeUp .5s .1s both;
 }
-.login-back:hover { color: var(--saffron); }
+.login-back:hover { color: var(--orange); }
+.login-back i { font-size: .65rem; }
 
-.login-heading { margin-bottom: 36px; animation: fadeUp .6s .2s both; }
+/* Heading */
+.login-heading {
+  margin-bottom: 32px;
+  animation: fadeUp .6s .2s both;
+}
+.login-heading-eyebrow {
+  font-family: var(--font-head); font-size: .7rem; font-weight: 700;
+  letter-spacing: .2em; text-transform: uppercase;
+  color: var(--amber); background: rgba(245,168,0,.12);
+  padding: 4px 12px; border-radius: 2px;
+  display: inline-block; margin-bottom: 12px;
+}
 .login-heading h1 {
-  font-family: var(--font-display);
-  font-size: clamp(2rem,4vw,2.8rem); font-weight: 900; font-style: italic;
-  color: var(--cream); letter-spacing: -.03em; line-height: .95; margin-bottom: 10px;
+  font-family: var(--font-hero);
+  font-size: clamp(2.8rem, 4.5vw, 4rem);
+  line-height: .9; color: var(--brown);
+  letter-spacing: .04em; margin-bottom: 8px;
 }
-.login-heading h1 span { color: var(--saffron); }
-.login-heading p { font-size: .85rem; font-weight: 300; color: rgba(253,246,237,.42); letter-spacing: .04em; }
+.login-heading h1 span { color: var(--orange); }
+.login-heading p {
+  font-size: .87rem; font-weight: 400;
+  color: rgba(61,28,2,.45); letter-spacing: .02em;
+}
 
+/* Error message */
 .error-msg {
-  background: rgba(193,68,14,.1); border: 1px solid rgba(193,68,14,.3);
-  color: #F4A135; padding: 12px 16px; border-radius: 3px;
+  background: rgba(214,40,40,.08);
+  border: 1px solid rgba(214,40,40,.25);
+  border-left: 3px solid var(--red);
+  color: var(--red); padding: 12px 16px; border-radius: 3px;
   font-size: .82rem; margin-bottom: 20px;
   display: flex; align-items: center; gap: 9px;
+  font-weight: 600;
 }
 
-.form-group { margin-bottom: 20px; animation: fadeUp .6s both; }
+/* Form groups */
+.form-group {
+  margin-bottom: 18px;
+  animation: fadeUp .6s both;
+}
 .form-group:nth-child(1){ animation-delay: .3s }
-.form-group:nth-child(2){ animation-delay: .4s }
+.form-group:nth-child(2){ animation-delay: .38s }
 
 .form-label {
-  display: block; font-size: .7rem; font-weight: 600;
+  display: block;
+  font-family: var(--font-head); font-size: .7rem; font-weight: 700;
   letter-spacing: .16em; text-transform: uppercase;
-  color: rgba(253,246,237,.36); margin-bottom: 10px;
+  color: rgba(61,28,2,.5); margin-bottom: 8px;
 }
+
 .input-wrap { position: relative; }
 .input-wrap i.icon-left {
   position: absolute; left: 16px; top: 50%; transform: translateY(-50%);
-  color: rgba(253,246,237,.18); font-size: .8rem; pointer-events: none; transition: color .3s;
+  color: rgba(61,28,2,.25); font-size: .82rem;
+  pointer-events: none; transition: color .3s;
 }
-.input-wrap:focus-within i.icon-left { color: var(--saffron); }
+.input-wrap:focus-within i.icon-left { color: var(--amber); }
+
 .input-wrap input {
-  width: 100%; padding: 0 48px; height: 52px;
-  background: rgba(253,246,237,.04) !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 3px; color: var(--cream) !important;
-  font-family: var(--font-body); font-size: .9rem; font-weight: 400;
-  outline: none; transition: border-color .3s, background .3s, box-shadow .3s;
+  width: 100%; padding: 0 48px; height: 54px;
+  background: #fff !important;
+  border: 2px solid rgba(61,28,2,.1) !important;
+  border-radius: 3px;
+  color: var(--brown) !important;
+  font-family: var(--font-body); font-size: .92rem; font-weight: 600;
+  outline: none;
+  transition: border-color .3s, box-shadow .3s;
   -webkit-appearance: none;
 }
-.input-wrap input::placeholder { color: rgba(253,246,237,.16); }
+.input-wrap input::placeholder { color: rgba(61,28,2,.22); font-weight: 400; }
 .input-wrap input:focus {
-  border-color: rgba(244,161,53,.5) !important;
-  background: rgba(244,161,53,.04) !important;
-  box-shadow: 0 0 0 3px rgba(244,161,53,.07) !important;
+  border-color: var(--amber) !important;
+  box-shadow: 0 0 0 4px rgba(245,168,0,.12) !important;
 }
 .input-wrap input:-webkit-autofill,
 .input-wrap input:-webkit-autofill:hover,
 .input-wrap input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px #2D1C0D inset !important;
-  -webkit-text-fill-color: var(--cream) !important;
-  border-color: rgba(253,246,237,.15) !important;
+  -webkit-box-shadow: 0 0 0 1000px #fff inset !important;
+  -webkit-text-fill-color: var(--brown) !important;
+  border-color: rgba(61,28,2,.15) !important;
 }
+
 .toggle-pass {
   position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
-  color: rgba(253,246,237,.2); font-size: .8rem; cursor: pointer; transition: color .25s; z-index: 1;
+  color: rgba(61,28,2,.2); font-size: .82rem;
+  cursor: pointer; transition: color .25s; z-index: 1;
 }
-.toggle-pass:hover { color: var(--saffron); }
+.toggle-pass:hover { color: var(--amber); }
 
+/* Submit button — Burger House style */
 .login-btn {
-  width: 100%; height: 54px; background: var(--saffron); color: var(--dark);
-  border: none; border-radius: 3px; font-family: var(--font-body);
-  font-weight: 700; font-size: .8rem; letter-spacing: .16em; text-transform: uppercase;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
-  position: relative; overflow: hidden; transition: color .3s; margin-top: 10px;
+  width: 100%; height: 56px;
+  background: var(--brown); color: var(--amber);
+  border: none; border-radius: 3px;
+  font-family: var(--font-head);
+  font-weight: 700; font-size: .92rem;
+  letter-spacing: .16em; text-transform: uppercase;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  position: relative; overflow: hidden;
+  transition: color .3s; margin-top: 10px;
+  animation: fadeUp .6s .46s both;
+  box-shadow: 0 6px 24px rgba(61,28,2,.2);
 }
-.login-btn::after {
-  content: ''; position: absolute; inset: 0; background: var(--burnt);
-  transform: scaleX(0); transform-origin: left; transition: transform .4s ease; z-index: 0;
+/* Amber fill on hover */
+.login-btn::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--amber);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .4s ease; z-index: 0;
 }
-.login-btn:hover::after { transform: scaleX(1); }
-.login-btn:hover { color: #fff; }
+.login-btn:hover::before { transform: scaleX(1); }
+.login-btn:hover { color: var(--brown); }
 .login-btn > * { position: relative; z-index: 1; }
 .login-btn:disabled { opacity: .6; cursor: not-allowed; }
-.login-btn:disabled::after { display: none; }
+.login-btn:disabled::before { display: none; }
 .login-btn:active { transform: translateY(1px); }
 
 .spinner {
-  width: 16px; height: 16px;
-  border: 2px solid rgba(26,15,5,.3); border-top-color: var(--dark);
+  width: 18px; height: 18px;
+  border: 2px solid rgba(245,168,0,.3);
+  border-top-color: var(--amber);
   border-radius: 50%; animation: spin .65s linear infinite; display: none;
 }
 
+/* Footer */
 .login-footer {
-  margin-top: 32px; text-align: center;
+  margin-top: 28px; text-align: center;
   font-size: .7rem; letter-spacing: .08em;
-  color: rgba(253,246,237,.16);
-  animation: fadeUp .6s .65s both;
+  color: rgba(61,28,2,.3);
+  animation: fadeUp .6s .6s both;
+  font-family: var(--font-head); font-weight: 600; text-transform: uppercase;
 }
-
-/* ══════════════════════
-   RIGHT — BRAND
-══════════════════════ */
-.login-right {
-  width: 48%; position: relative;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center;
-  overflow: hidden; padding: 60px 48px;
-  animation: slideInRight .7s cubic-bezier(.25,.46,.45,.94) both;
-}
-
-.rp-bg {
-  position: absolute; inset: 0;
-  background-image: url('https://images.unsplash.com/photo-1567188040759-fb8a883dc6d8?w=1200&q=85');
-  background-size: cover; background-position: center;
-  filter: brightness(.2) saturate(1.1); transition: transform 16s ease;
-}
-.login-right:hover .rp-bg { transform: scale(1.05); }
-
-.rp-grad {
-  position: absolute; inset: 0;
-  background: linear-gradient(150deg, rgba(193,68,14,.42) 0%, rgba(26,15,5,.58) 52%, rgba(26,15,5,.93) 100%);
-}
-
-/* Big "Tiffins" watermark on right — saffron stroke */
-.rp-wm {
-  position: absolute;
-  bottom: -30px; right: -20px;
-  font-family: var(--font-display);
-  font-weight: 900; font-style: italic;
-  font-size: clamp(80px, 14vw, 160px);
-  line-height: 1; white-space: nowrap;
-  pointer-events: none; user-select: none; z-index: 1;
-  color: transparent;
-  -webkit-text-stroke: 1.5px rgba(244,161,53,0.1);
-  letter-spacing: -.02em;
-  transform: rotate(-8deg);
-}
-
-.rp-line {
-  position: absolute; top: 60px; bottom: 60px; left: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, transparent, var(--saffron), transparent);
-  opacity: .35;
-}
-
-.rp-content {
-  position: relative; z-index: 2; text-align: center;
-  max-width: 360px; width: 100%;
-  display: flex; flex-direction: column; align-items: center;
-}
-
-/* ── THREE-COLOUR TITLE ──
-   SOUTH INDIAN  →  cream, thin, wide tracking
-   TIFFIN        →  saffron, huge italic display
-   PARLOUR       →  cream, thin, wide tracking
-*/
-.rp-title {
-  margin-bottom: 4px;
-  animation: fadeUp .7s .2s both;
-  line-height: 1;
-}
-.rp-title .t-top {
-  display: block;
-  font-family: var(--font-body);
-  font-size: clamp(.7rem, 1.1vw, .85rem);
-  font-weight: 300;
-  letter-spacing: .42em;
-  text-transform: uppercase;
-  color: rgba(253,246,237,.58);
-  margin-bottom: 0;
-}
-.rp-title .t-mid {
-  display: block;
-  font-family: var(--font-display);
-  font-size: clamp(3.6rem, 6.8vw, 5.2rem);
-  font-weight: 900;
-  font-style: italic;
-  color: var(--saffron);
-  letter-spacing: -.04em;
-  line-height: .85;
-  text-shadow: 0 8px 48px rgba(244,161,53,.22), 0 2px 16px rgba(244,161,53,.12);
-}
-.rp-title .t-bot {
-  display: block;
-  font-family: var(--font-body);
-  font-size: clamp(.7rem, 1.1vw, .85rem);
-  font-weight: 300;
-  letter-spacing: .42em;
-  text-transform: uppercase;
-  color: rgba(253,246,237,.58);
-  margin-top: 2px;
-}
-
-/* Ornament divider */
-.rp-ornament {
-  display: flex; align-items: center; gap: 10px;
-  margin: 20px 0 26px;
-  animation: fadeUp .7s .35s both;
-  width: 100%;
-}
-.rp-ornament::before,
-.rp-ornament::after {
-  content: ''; flex: 1; height: 1px;
-}
-.rp-ornament::before { background: linear-gradient(to right, transparent, rgba(244,161,53,.4)); }
-.rp-ornament::after  { background: linear-gradient(to left,  transparent, rgba(244,161,53,.4)); }
-.rp-ornament-dots { display: flex; gap: 5px; align-items: center; flex-shrink: 0; }
-.rp-ornament-dots span { display: block; border-radius: 50%; background: var(--saffron); opacity: .65; }
-.rp-ornament-dots span:nth-child(1),
-.rp-ornament-dots span:nth-child(3) { width: 4px; height: 4px; }
-.rp-ornament-dots span:nth-child(2) { width: 6px; height: 6px; opacity: .9; }
-
-/* Pills */
-.rp-pills { display: flex; flex-direction: column; gap: 9px; width: 100%; animation: fadeUp .7s .48s both; }
-.rp-pill {
-  display: flex; align-items: center; gap: 14px;
-  background: rgba(253,246,237,.05); border: 1px solid rgba(253,246,237,.09);
-  border-radius: 4px; padding: 13px 16px; text-align: left;
-  transition: background .3s, border-color .3s, transform .3s;
-}
-.rp-pill:hover { background: rgba(244,161,53,.07); border-color: rgba(244,161,53,.22); transform: translateX(5px); }
-.rp-pill-icon { width: 36px; height: 36px; background: rgba(244,161,53,.1); border: 1px solid rgba(244,161,53,.18); border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 1rem; flex-shrink: 0; }
-.rp-pill-txt strong { display: block; font-size: .8rem; font-weight: 600; color: var(--cream); margin-bottom: 1px; }
-.rp-pill-txt span { font-size: .7rem; color: rgba(253,246,237,.38); font-weight: 300; }
-
-/* Stats */
-.rp-stats { display: flex; margin-top: 18px; width: 100%; border: 1px solid rgba(253,246,237,.09); border-radius: 4px; overflow: hidden; animation: fadeUp .7s .62s both; }
-.rp-stat { flex: 1; text-align: center; padding: 11px 8px; border-right: 1px solid rgba(253,246,237,.09); }
-.rp-stat:last-child { border-right: none; }
-.rp-stat-val { font-family: var(--font-display); font-size: 1.3rem; font-weight: 900; color: var(--saffron); line-height: 1; margin-bottom: 3px; }
-.rp-stat-lbl { font-size: .6rem; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: rgba(253,246,237,.26); }
 
 /* ══ MOBILE ══ */
-@media (max-width: 820px) {
-  body { display: block !important; overflow-y: auto; }
+@media (max-width: 860px) {
+  body { display: block !important; overflow-y: auto; overflow-x: hidden; }
   .login-split { flex-direction: column; min-height: 100vh; }
 
-  .login-right { width: 100%; order: -1; padding: 44px 24px 32px; animation: slideInUp .7s cubic-bezier(.25,.46,.45,.94) both; }
-  .rp-line { display: none; }
-  .rp-wm { font-size: 80px; bottom: -10px; right: -10px; }
-  .rp-content { max-width: 100%; }
-  .rp-title .t-top { font-size: .63rem; letter-spacing: .3em; }
-  .rp-title .t-mid { font-size: 3.2rem; }
-  .rp-title .t-bot { font-size: .63rem; letter-spacing: .3em; }
-  .rp-ornament { margin: 14px 0 20px; }
-  .rp-pills { flex-direction: row; flex-wrap: wrap; gap: 8px; }
-  .rp-pill { flex: 1 1 calc(50% - 4px); min-width: 130px; padding: 10px 12px; gap: 10px; }
-  .rp-pill-icon { width: 30px; height: 30px; font-size: .85rem; }
-  .rp-pill-txt strong { font-size: .75rem; }
-  .rp-pill-txt span { font-size: .65rem; }
-  .rp-stats { margin-top: 12px; }
-  .rp-stat { padding: 10px 6px; }
-  .rp-stat-val { font-size: 1.1rem; }
+  .login-left {
+    width: 100%; order: -1;
+    padding: 44px 24px 32px;
+    animation: slideInUp .7s cubic-bezier(.25,.46,.45,.94) both;
+  }
+  .ll-edge { display: none; }
+  .ll-wm { font-size: 80px; }
+  .ll-title .t-mid { font-size: 3.6rem; }
+  .ll-pills { flex-direction: row; flex-wrap: wrap; gap: 8px; }
+  .ll-pill { flex: 1 1 calc(50% - 4px); min-width: 140px; padding: 10px 12px; gap: 10px; }
+  .ll-pill-icon { width: 32px; height: 32px; font-size: .85rem; }
 
-  .login-left { padding: 36px 24px 48px; justify-content: flex-start; animation: slideInUp .7s .1s cubic-bezier(.25,.46,.45,.94) both; }
-  .wm-text { font-size: 80px; }
-  .login-back { margin-bottom: 28px; }
-  .login-heading h1 { font-size: 2rem; }
+  .login-right {
+    padding: 36px 24px 48px;
+    animation: slideInUp .7s .1s cubic-bezier(.25,.46,.45,.94) both;
+  }
+  .login-back { margin-bottom: 24px; }
+  .login-heading h1 { font-size: 2.8rem; }
 }
 
 @media (max-width: 480px) {
-  .login-right { padding: 36px 20px 26px; }
-  .rp-title .t-mid { font-size: 2.8rem; }
-  .rp-pills { flex-direction: column; }
-  .rp-pill { min-width: unset; }
-  .rp-wm { font-size: 60px; }
-  .login-left { padding: 28px 20px 40px; }
-  .login-back { margin-bottom: 22px; }
-  .login-heading h1 { font-size: 1.8rem; }
-  .wm-text { font-size: 56px; }
+  .login-left { padding: 36px 20px 28px; }
+  .ll-pills { flex-direction: column; }
+  .ll-pill { min-width: unset; }
+  .ll-title .t-mid { font-size: 3rem; }
+  .login-right { padding: 28px 20px 40px; }
+  .login-heading h1 { font-size: 2.4rem; }
 }
 </style>
 @endsection
@@ -366,22 +478,86 @@ body::before {
 
 <div class="login-split">
 
-  {{-- ══ LEFT: FORM ══ --}}
+  {{-- ══ LEFT: BRAND PANEL ══ --}}
   <div class="login-left">
+    <div class="ll-bg"></div>
+    <div class="ll-grad"></div>
+    <div class="ll-edge"></div>
+    <div class="ll-wm" aria-hidden="true">TIFFINS</div>
 
-    {{-- Watermark text behind form --}}
-    <div class="wm-text" aria-hidden="true">Tiffins</div>
+    <div class="ll-content">
+
+      <div class="ll-eyebrow">Authentic South Indian</div>
+
+      {{-- Big Bebas Neue typographic title --}}
+      <div class="ll-title">
+        <span class="t-top">South Indian</span>
+        <span class="t-mid">TIFFIN</span>
+        <span class="t-bot">Parlour System</span>
+      </div>
+
+      <div class="ll-ornament">
+        <span class="ll-ornament-icon">🍽️</span>
+      </div>
+
+      <div class="ll-pills">
+        <div class="ll-pill">
+          <div class="ll-pill-icon">📱</div>
+          <div class="ll-pill-txt">
+            <strong>QR Table Ordering</strong>
+            <span>No app download needed</span>
+          </div>
+        </div>
+        <div class="ll-pill">
+          <div class="ll-pill-icon">⚡</div>
+          <div class="ll-pill-txt">
+            <strong>Live Counter Alerts</strong>
+            <span>Orders in under 2 seconds</span>
+          </div>
+        </div>
+        <div class="ll-pill">
+          <div class="ll-pill-icon">📊</div>
+          <div class="ll-pill-txt">
+            <strong>Daily PDF Reports</strong>
+            <span>Auto-generated every night</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="ll-stats">
+        <div class="ll-stat">
+          <div class="ll-stat-val">0%</div>
+          <div class="ll-stat-lbl">Commission</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat-val">&lt;2s</div>
+          <div class="ll-stat-lbl">Notification</div>
+        </div>
+        <div class="ll-stat">
+          <div class="ll-stat-val">EN+తె</div>
+          <div class="ll-stat-lbl">Bilingual</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  {{-- ══ RIGHT: FORM ══ --}}
+  <div class="login-right">
+    <div class="rp-accent-bar"></div>
+    <div class="rp-wm" aria-hidden="true">TIFFINS</div>
 
     <div class="login-form-inner">
 
       <a href="/" class="login-back">
         <i class="fas fa-arrow-left"></i>
-        <span>Back to home</span>
+        <span>Back to Home</span>
       </a>
 
       <div class="login-heading">
-        <h1>Welcome <span>back.</span></h1>
-        <p>Sign in to manage your parlour</p>
+        <div class="login-heading-eyebrow">Admin Portal</div>
+        <h1>SIGN <span>IN.</span></h1>
+        <p>Manage your parlour — menu, orders, reports</p>
       </div>
 
       @if(session('error'))
@@ -397,6 +573,7 @@ body::before {
         <div class="form-group">
           <label class="form-label">Email Address</label>
           <div class="input-wrap">
+            <i class="fas fa-envelope icon-left"></i>
             <input
               type="email"
               name="email"
@@ -405,13 +582,13 @@ body::before {
               autocomplete="email"
               required autofocus
             >
-            <i class="fas fa-envelope icon-left"></i>
           </div>
         </div>
 
         <div class="form-group">
           <label class="form-label">Password</label>
           <div class="input-wrap">
+            <i class="fas fa-lock icon-left"></i>
             <input
               type="password"
               name="password"
@@ -420,7 +597,6 @@ body::before {
               autocomplete="current-password"
               required
             >
-            <i class="fas fa-lock icon-left"></i>
             <i class="fas fa-eye toggle-pass" id="togglePass"></i>
           </div>
         </div>
@@ -434,73 +610,7 @@ body::before {
       </form>
 
       <div class="login-footer">
-        &copy; {{ date('Y') }} South Tiffins. All rights reserved.
-      </div>
-
-    </div>
-  </div>
-
-  {{-- ══ RIGHT: BRAND PANEL ══ --}}
-  <div class="login-right">
-    <div class="rp-bg"></div>
-    <div class="rp-grad"></div>
-    <div class="rp-line"></div>
-
-    {{-- Watermark text behind content --}}
-    <div class="rp-wm" aria-hidden="true">Tiffins</div>
-
-    <div class="rp-content">
-
-      {{-- Three-colour typographic title — no logo --}}
-      <div class="rp-title">
-        <span class="t-top">South Indian</span>
-        <span class="t-mid">Tiffin</span>
-        <span class="t-bot">Parlour</span>
-      </div>
-
-      <div class="rp-ornament">
-        <div class="rp-ornament-dots">
-          <span></span><span></span><span></span>
-        </div>
-      </div>
-
-      <div class="rp-pills">
-        <div class="rp-pill">
-          <div class="rp-pill-icon">&#128241;</div>
-          <div class="rp-pill-txt">
-            <strong>QR Table Ordering</strong>
-            <span>No app download needed</span>
-          </div>
-        </div>
-        <div class="rp-pill">
-          <div class="rp-pill-icon">&#9889;</div>
-          <div class="rp-pill-txt">
-            <strong>Live Counter Alerts</strong>
-            <span>Orders in under 2 seconds</span>
-          </div>
-        </div>
-        <div class="rp-pill">
-          <div class="rp-pill-icon">&#128202;</div>
-          <div class="rp-pill-txt">
-            <strong>Daily PDF Reports</strong>
-            <span>Auto-generated every night</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="rp-stats">
-        <div class="rp-stat">
-          <div class="rp-stat-val">0%</div>
-          <div class="rp-stat-lbl">Commission</div>
-        </div>
-        <div class="rp-stat">
-          <div class="rp-stat-val">&lt;2s</div>
-          <div class="rp-stat-lbl">Notification</div>
-        </div>
-        <div class="rp-stat">
-          <div class="rp-stat-val">EN+&#3078;</div>
-          <div class="rp-stat-lbl">Bilingual</div>
-        </div>
+        &copy; {{ date('Y') }} South Tiffins &nbsp;·&nbsp; All rights reserved.
       </div>
 
     </div>
@@ -523,8 +633,8 @@ body::before {
   togglePass.addEventListener('click', () => {
     const isPass = password.type === 'password';
     password.type = isPass ? 'text' : 'password';
-    togglePass.classList.toggle('fa-eye',       !isPass);
-    togglePass.classList.toggle('fa-eye-slash',  isPass);
+    togglePass.classList.toggle('fa-eye',      !isPass);
+    togglePass.classList.toggle('fa-eye-slash', isPass);
   });
 
   loginForm.addEventListener('submit', () => {
